@@ -3,19 +3,85 @@
   <head>
     <meta charset="utf-8">
     <title>たにちゃん</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Noto Sans JP', sans-serif;
+        background: linear-gradient(135deg, #f8f9fa, #e0f7fa);
+        color: #333;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 60px auto;
+        background: #fff;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        padding: 40px;
+      }
+
+      h1, h2 {
+        color: #00796b;
+        text-align: center;
+      }
+
+      h1 {
+        border-bottom: 2px solid #00796b;
+        padding-bottom: 10px;
+      }
+
+      h2 {
+        margin-top: 40px;
+        border-left: 5px solid #00796b;
+        padding-left: 10px;
+        text-align: left;
+      }
+
+      p {
+        line-height: 1.8;
+        font-size: 1.1em;
+        text-align: justify;
+      }
+
+      a {
+        color: #009688;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 50px;
+        color: #666;
+        font-size: 0.9em;
+      }
+    </style>
   </head>
+
   <body>
-    <h1>私の自己紹介ページ</h1>
-    <p>こんにちは。私はHTMLを勉強中の学生です。</p>
-    <p>まじでありえん,</p>
+    <div class="container">
+      <h1>私の自己紹介ページ</h1>
+      <p>こんにちは. 私はHTMLを勉強中の学生です.</p>
+      <p>まじでありえん.</p>
 
-    <h2>プロフィール</h2>
-    <p>東京都在住で、電子工学を学んでいます。</p>
+      <h2>プロフィール</h2>
+      <p>東京都在住で, 電子工学を学んでいます.</p>
 
-    <h1>趣味</h1>
-    <p>音楽、プログラミング、友人とのイベント企画など。</p>
+      <h1>趣味</h1>
+      <p>音楽, プログラミング, 友人とのイベント企画など.</p>
 
-    <h2>連絡先</h2>
-    <p>お問い合わせは example@example.com までお願いします。</p>
+      <h2>連絡先</h2>
+      <p>お問い合わせは <a href="mailto:example@example.com">example@example.com</a> までお願いします.</p>
+
+      <footer>
+        © 2025 たにちゃん All Rights Reserved.
+      </footer>
+    </div>
   </body>
 </html>
