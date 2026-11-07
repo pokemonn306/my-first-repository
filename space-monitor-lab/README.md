@@ -1,50 +1,49 @@
-# Space Monitor Lab
+# ドンドラONLINE 監視挙動再現（非公式）
 
-macOSのSpace切り替え（トラックパッドのスワイプ）を含む、ブラウザのフルスクリーン監視・動画停止・カメラ静止画取得を検証するための非公式の再現サイトです。
+最初に提供された資料**だけ**を根拠にした、macOSのSpace切り替えとフルスクリーン監視の独立再現サイトです。元サイトに接続する公式クライアントではありません。
 
-**非公式の独立実装です。** 提供された `react-components-bundle-DFEY51S4.js` / HTMLの動作条件を参照していますが、元の配信サービスと接続しません。著作権のある第三者コードや、HTML内の個人識別子・認証情報・署名付きAWS URLは公開していません。実際の顔認証とHLS動画再生は再現対象外です。
+## 使用したソース
 
-## 使い方
+- `ドンドラONLINE _ イースタンドライビングスクール.html`
+- `react-components-bundle-DFEY51S4.js`
+- `application-CN5DfSZU.css`
+- `hls.min.js`
+- `css`
+- `貼り付けたテキスト（1）(3).txt`
+- 添付の受講ログサンプル画像
 
-1. GitHub Pages（HTTPS）からサイトにアクセスします。
-2. 任意で「カメラを許可・起動」を押し、ブラウザのカメラ許可ダイアログを承認します。
-3. 「検証開始・全画面化」を押して動画の模擬再生と全画面監視を開始します。
-4. macOSのトラックパッドを左右にスワイプして別のSpaceへ移動し、元のSpaceへ戻ります。
-5. イベントログで、`VIDEO_DISABLED_FULL_SCREEN` と `DIAG_VISIBILITY_CHANGE` / `DIAG_WINDOW_BLUR` を比較します。
-6. 「JSON出力」でログをダウンロードできます。撮影画像は各サムネイルから個別保存できます。
+これ以外のWebサイト、ライブラリ、メディアを再現の根拠にはしていません。受講ログサンプル画像は、提供されたHTMLに記載されていた**公開画像のURL**を参照します。アプリ本体は外部ライブラリ不要です。
 
-macOSのジェスチャーはシステム設定によって3本指または4本指になります。
+## 再現した内容
 
-## ソース準拠の項目
+- HTMLに記載された「注意事項」「受講状況の撮影について」「視聴終了」の日本語文言と、Bootstrap系の配色を用いた画面
+- `screenfull` 相当のFullscreen APIイベント。フルスクリーン解除時に `VIDEO_DISABLED_FULL_SCREEN (195)` を記録
+- 全画面解除 **2回** / 解除状態 **60秒**、一時停止 **2回** / 停止状態 **60秒** のローカル判定
+- `VIDEO_STARTED (110)`、`VIDEO_PAUSED (120)`、`VIDEO_RESUMED (130)`、`VIDEO_FINISHED (140)`、`VIDEO_REJECTED (150)`、`VIDEO_SEEKED (160)` などのイベント番号
+- カメラ権限を明示的に要求し、640×480 JPEGの静止画をメモリに保存。初回から60秒後、以後60秒間隔。異常時の再試行は15秒後
+- 長さ **770160 ms** の模擬再生タイムライン
+- ローカルイベントJSON保存（カメラ画像は含めない）
+- `isCommonLesson: true` のチュートリアルに相当する設定（元コードの動画内定期本人確認は除外）
 
-| 項目 | 設定 / イベント |
-| --- | --- |
-| フルスクリーン解除 | `fullscreenchange`, `VIDEO_DISABLED_FULL_SCREEN (195)` |
-| フルスクリーン解除回数 | 2回 |
-| 解除継続時間 | 60秒 |
-| 動画停止 | `VIDEO_PAUSED (120)`, `VIDEO_RESUMED (130)` |
-| 動画停止回数 / 停止時間 | 2回 / 60秒 |
-| カメラ撮影周期 | 60秒、失敗時15秒再試行 |
-| 撮影処理 | `getUserMedia`, `canvas`, JPEG変換、黒画面・同一画像の簡易判定 |
-| 動画再生位置変更 | `SYSTEM_BLOCK_SEEK (610)` |
-| ネットワーク切断 | `VIDEO_NETWORK_DISCONNECTED (180)` |
-| 元HTMLのレッスン長 | 770160 ms（12分50.16秒） |
+## 使用方法
 
-**元サイトと異なる点：** 本サイトの動画表示は時間経過を模擬した独自アニメーションであり、HLS再生、実教材、サーバーの受講状態、本人認証、IndexedDBバックアップ、S3アップロード、実際のスクリーンショット送信や受講中断とは無関係です。`visibilitychange` と `blur/focus` は追加の診断ログであり、元ソースに存在した監視と区別しています。`isPc: true`, `isCommonLesson: true` の添付HTMLに対応して作成しています。カメラの撮影処理は独立実装です。
+1. GitHub Pagesで公開したサイトをChromeで開く。
+2. 2つの注意事項ダイアログを確認する。
+3. 「カメラを許可する」を押して許可する。画像は送信されない。
+4. 「教習映像の視聴を開始する」を押してFullscreen APIを有効化する。
+5. macOSのSpaceを切り替え、戻った後に画面下部のログを確認する。
+6. JSONのログを出力して、`VIDEO_DISABLED_FULL_SCREEN`の有無を確認する。
 
-## プライバシー・技術制限
+`visibilitychange` / `window.blur` の追加診断は、元コードに実装されていないため削除しています。Space切り替えが必ずフルスクリーン解除を起こすわけではありません。
 
-- `fetch`/XHR/WebSocketなどによる通信・アップロードなし。
-- カメラ映像の取得はユーザーが明示的にボタンを押した後だけです。マイクは取得しません。
-- カメラ画像とイベントはページのメモリ内だけで保持され、ページを閉じると消えます。
-- JSON出力に顔画像は含まれません。カメラ画像は個別に保存できます。
-- GitHub PagesのHTTPS経由でブラウザの `getUserMedia` を使います。
-- `fullscreenchange` はOSのSpace切り替えそのものを表すものではありません。ChromeとSafari、macOSのバージョンによって挙動が変わります。
+## 完全一致できない範囲
 
-## GitHub Pages
+元のページは**既に視聴が終了した状態のHTML**です。動画再生時の実DOM・画像や、配信される実教材HLSセグメントは提供されていません。元のバンドルは`jquery-CTSD0JXU.js`と`dayjs.min-COzq6EtB.js`をインポートしますが、これらも添付されていません。したがって元のReactコンポーネントをそのまま動作させることはできません。
 
-リポジトリ `pokemonn306/my-first-repository` の `main` ブランチに `space-monitor-lab/` として配置する想定です。GitHub Pages設定が `Deploy from a branch`・`main`・`/(root)` なら次のURLで公開できます。
+実AWS S3、顔認証API、受講結果API、同時受講API、トークン・署名付きURL・実会員IDは取り込みません。顔認証は行われず、サーバー側の最終受講判定を再現できません。動画は視覚的なプレーヤーとタイムラインのみで、実教材そのものではありません。
 
-`https://pokemonn306.github.io/my-first-repository/space-monitor-lab/`
+**この再現でイベントが発生しなかったことは、公式サイトでも検知されないことを証明しません。**
 
-Pages未設定の場合は、リポジトリ **Settings > Pages > Build and deployment > Deploy from a branch > main / (root) > Save** の順に有効化してください。
+## 安全性
+
+認証情報、署名付きURL、生徒の識別子をコードに含めません。Webカメラ映像やJSONログは外部に送信しません。作成者本人による操作時にのみカメラが起動します。
