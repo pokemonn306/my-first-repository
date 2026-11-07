@@ -17,7 +17,7 @@
 ## 再現した内容
 
 - HTMLに記載された「注意事項」「受講状況の撮影について」「視聴終了」の日本語文言と、Bootstrap系の配色を用いた画面
-- `screenfull` 相当のFullscreen APIイベント。フルスクリーン解除時に `VIDEO_DISABLED_FULL_SCREEN (195)` を記録
+- `screenfull` が要素省略時に document.documentElement を全画面化する動作を反映したFullscreen APIイベント。フルスクリーン解除時に `VIDEO_DISABLED_FULL_SCREEN (195)` を記録
 - 全画面解除 **2回** / 解除状態 **60秒**、一時停止 **2回** / 停止状態 **60秒** のローカル判定
 - `VIDEO_STARTED (110)`、`VIDEO_PAUSED (120)`、`VIDEO_RESUMED (130)`、`VIDEO_FINISHED (140)`、`VIDEO_REJECTED (150)`、`VIDEO_SEEKED (160)` などのイベント番号
 - カメラ権限を明示的に要求し、640×480 JPEGの静止画をメモリに保存。初回から60秒後、以後60秒間隔。異常時の再試行は15秒後
